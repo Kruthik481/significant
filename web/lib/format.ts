@@ -19,6 +19,12 @@ export function pValue(p: number | null): string {
   return String(Number(p.toPrecision(3)));
 }
 
+// "p < 0.001" or "p = 0.042", for prose.
+export function pText(p: number | null): string {
+  const v = pValue(p);
+  return v.startsWith('<') ? `p ${v}` : `p = ${v}`;
+}
+
 export function num(x: number | null, digits = 2): string {
   return x === null ? DASH : x.toLocaleString('en-US', { minimumFractionDigits: digits, maximumFractionDigits: digits });
 }

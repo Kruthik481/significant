@@ -1,26 +1,291 @@
 @import "tailwindcss";
 
+/* Lab notebook: graph paper, blue ink for the write-up, red pen only for annotations. */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --paper: #fbfcfe;
+  --grid-minor: #dfe7f3;
+  --grid-major: #c9d7ec;
+  --sheet: rgb(255 255 255 / 0.9);
+  --ink: #1d3a8a;
+  --ink-soft: #52648f;
+  --rule: #c3d0e6;
+  --pen: #d2302c;
+  --win: #1f7a4d;
+  --text: #1a2340;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --font-serif: var(--font-source-serif);
+  --font-mono: var(--font-mono-data);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--paper);
+  background-image:
+    linear-gradient(var(--grid-minor) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-minor) 1px, transparent 1px),
+    linear-gradient(var(--grid-major) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-major) 1px, transparent 1px);
+  background-size: 24px 24px, 24px 24px, 120px 120px, 120px 120px;
+  color: var(--text);
+  font-family: var(--font-source-serif), Georgia, serif;
+  font-size: 1.0625rem;
+  line-height: 1.6;
+}
+
+::selection {
+  background: #ffe36e;
+}
+
+.sheet {
+  background: var(--sheet);
+  border: 1px solid var(--rule);
+  box-shadow: 0 1px 0 var(--rule), 0 12px 32px -24px rgb(29 58 138 / 0.35);
+  padding: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .sheet {
+    padding: 2rem 2.5rem;
+  }
+}
+
+.wordmark {
+  font-weight: 700;
+  font-size: 1.35rem;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+}
+
+.h-display {
+  font-weight: 700;
+  font-size: clamp(2.1rem, 5vw, 3.25rem);
+  line-height: 1.08;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+}
+
+.h-section {
+  font-weight: 700;
+  font-size: 1.35rem;
+  color: var(--ink);
+}
+
+.lede {
+  color: var(--ink-soft);
+  font-size: 1.15rem;
+  max-width: 62ch;
+}
+
+.data {
+  font-family: var(--font-mono-data), ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+.pen {
+  font-family: var(--font-pen), cursive;
+  color: var(--pen);
+  font-size: 1.35rem;
+  line-height: 1.1;
+}
+
+.fig-caption {
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+}
+
+.fig-caption b {
+  color: var(--ink);
+}
+
+.muted {
+  color: var(--ink-soft);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  border: 1.5px solid var(--ink);
+  color: var(--ink);
+  background: white;
+  padding: 0.45rem 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 120ms, color 120ms;
+}
+
+.btn:hover:not(:disabled) {
+  background: var(--ink);
+  color: white;
+}
+
+.btn-solid {
+  background: var(--ink);
+  color: white;
+}
+
+.btn-solid:hover:not(:disabled) {
+  background: #142a66;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: progress;
+}
+
+:is(.btn, a, input, select, summary, .card):focus-visible {
+  outline: 2px solid var(--pen);
+  outline-offset: 3px;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  width: 100%;
+  text-align: left;
+  background: white;
+  border: 1px solid var(--rule);
+  border-top: 4px solid var(--ink);
+  padding: 1rem 1.15rem 1.1rem;
+  cursor: pointer;
+  transition: transform 150ms, box-shadow 150ms;
+}
+
+.card:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px -18px rgb(29 58 138 / 0.6);
+}
+
+.card:disabled {
+  cursor: progress;
+  opacity: 0.7;
+}
+
+.field {
+  display: grid;
+  gap: 0.25rem;
+  font-size: 0.95rem;
+  color: var(--ink-soft);
+}
+
+.field input,
+.field select {
+  font-family: var(--font-mono-data), monospace;
+  font-size: 0.95rem;
+  color: var(--text);
+  border: 1px solid var(--rule);
+  border-bottom: 2px solid var(--ink);
+  background: white;
+  padding: 0.35rem 0.5rem;
+}
+
+.dropzone {
+  border: 2px dashed var(--ink-soft);
+  background: rgb(255 255 255 / 0.75);
+  padding: 2rem 1rem;
+  text-align: center;
+  transition: background-color 150ms, border-color 150ms;
+}
+
+.dropzone[data-over="true"] {
+  border-color: var(--pen);
+  background: #fff5f4;
+}
+
+.alert {
+  border-left: 4px solid var(--pen);
+  background: #fff5f4;
+  padding: 0.6rem 0.9rem;
+  color: #8f1d1a;
+}
+
+.stat-label {
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+}
+
+.stat-value {
+  font-family: var(--font-mono-data), monospace;
+  font-variant-numeric: tabular-nums;
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.tone-win {
+  color: var(--win);
+}
+
+.tone-loss,
+.tone-invalid {
+  color: var(--pen);
+}
+
+.tone-neutral {
+  color: var(--ink);
+}
+
+table.ledger {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+@layer components {
+table.ledger th {
+  text-align: start;
+  font-weight: 600;
+  color: var(--ink-soft);
+  border-bottom: 2px solid var(--ink);
+  padding: 0.35rem 0.5rem;
+}
+
+table.ledger td {
+  border-bottom: 1px solid var(--rule);
+  padding: 0.35rem 0.5rem;
+}
+}
+
+/* red-pen marks draw themselves once */
+.pen-stroke {
+  fill: none;
+  stroke: var(--pen);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: pen-draw 700ms ease-out forwards;
+}
+
+@keyframes pen-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.pen-fade {
+  opacity: 0;
+  animation: pen-fade 400ms ease-out forwards;
+}
+
+@keyframes pen-fade {
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pen-stroke {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+  .pen-fade {
+    animation: none;
+    opacity: 1;
+  }
+  .card {
+    transition: none;
+  }
 }
