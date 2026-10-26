@@ -41,7 +41,14 @@ class Store:
     @classmethod
     async def open(cls, dsn: str, schema: str | None = None) -> "Store":
         kwargs = {"options": f"-c search_path={schema}"} if schema else {}
-        pool = AsyncConnectionPool(dsn, min_size=1, max_size=5, kwargs=kwargs, open=False)
+        pool = AsyncConnectionPool(
+            dsn,
+            min_size=1,
+            max_size=5,
+            kwargs=kwargs,
+            open=False,
+            check=AsyncConnectionPool.check_connection,  # Neon drops idle connections
+        )
         await pool.open(wait=True, timeout=15)
         return cls(pool)
 

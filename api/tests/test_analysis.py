@@ -62,7 +62,17 @@ def test_degenerate_data_serialises_without_nan():
 
 
 @pytest.mark.parametrize(
-    "kwargs", [{"alpha": 0.5}, {"alpha": 0.0001}, {"expected_split": 1.0}, {"tau": -1.0}]
+    "kwargs",
+    [
+        {"alpha": 0.5},
+        {"alpha": 0.0001},
+        {"expected_split": 1.0},
+        {"tau": -1.0},
+        {"tau": 1e-200},
+        {"tau": 1e200},
+        {"tau": float("inf")},
+        {"tau": float("nan")},
+    ],
 )
 def test_options_are_validated(kwargs):
     with pytest.raises(ValueError):

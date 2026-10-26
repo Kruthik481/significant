@@ -1,5 +1,6 @@
 """Turn a validated experiment into a report: the raw test, CUPED, SRM, sequential view and a verdict."""
 
+import math
 from dataclasses import dataclass
 
 import numpy as np
@@ -26,8 +27,9 @@ class AnalysisOptions:
             raise ValueError(f"alpha must be between {low} and {high}")
         if not 0 < self.expected_split < 1:
             raise ValueError("expected_split must be between 0 and 1")
-        if self.tau is not None and not self.tau > 0:
-            raise ValueError("tau must be positive")
+        # tau is squared downstream, so it must stay finite and non-zero once squared
+        if self.tau is not None and not (self.tau > 0 and 0 < self.tau * self.tau < math.inf):
+            raise ValueError("tau must be a positive, finite number")
 
 
 def _verdict(primary: TestResult, srm_flagged: bool, alpha: float) -> Verdict:

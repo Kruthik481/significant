@@ -87,6 +87,15 @@ def test_rate_limit_counts_analyses_per_client(client):
     assert other.status_code == 201
 
 
+def test_rate_limit_ignores_a_spoofed_forwarded_for(client):
+    # the proxy appends the real client; only the rightmost entry is trustworthy
+    for i in range(5):
+        r = client.post("/analyses/samples/broken_split", headers={"X-Forwarded-For": f"6.6.6.{i}, 1.2.3.4"})
+        assert r.status_code == 201
+    r = client.post("/analyses/samples/broken_split", headers={"X-Forwarded-For": "7.7.7.7, 1.2.3.4"})
+    assert r.status_code == 429
+
+
 def test_samples_listing_and_download(client):
     names = [s["name"] for s in client.get("/samples").json()]
     assert names == ["checkout_win", "pricing_null", "broken_split"]

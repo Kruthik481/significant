@@ -51,8 +51,9 @@ def _envelope(status: int, code: str, message: str, headers: dict[str, str] | No
 
 def _client_ip(request: Request) -> str:
     forwarded = request.headers.get("x-forwarded-for", "")
-    first = forwarded.split(",")[0].strip()
-    return first or (request.client.host if request.client else "unknown")
+    # Render's proxy appends the address it saw; anything to its left is client-supplied
+    last = forwarded.split(",")[-1].strip()
+    return last or (request.client.host if request.client else "unknown")
 
 
 def create_app(settings: Settings) -> FastAPI:
@@ -113,6 +114,9 @@ def create_app(settings: Settings) -> FastAPI:
         except ValueError as e:
             raise ApiError(422, "bad_option", str(e)) from e
 
+    # one analysis at a time keeps peak memory inside the 512 MB container
+    analysis_slot = asyncio.Semaphore(1)
+
     def check_rate(request: Request) -> None:
         allowed, retry = limiter.allow(_client_ip(request))
         if not allowed:
@@ -131,7 +135,8 @@ def create_app(settings: Settings) -> FastAPI:
             return analyze(parse_csv(data, control, max_bytes=len(data)), opts).model_dump(mode="json")
 
         try:
-            report = await asyncio.to_thread(work)
+            async with analysis_slot:
+                report = await asyncio.to_thread(work)
         except IngestError as e:
             raise ApiError(413 if e.code == "too_large" else 400, e.code, e.message) from e
         rid = await store(request).save(name[:NAME_LIMIT], source, report)
