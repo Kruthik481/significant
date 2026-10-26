@@ -92,16 +92,17 @@ class SequentialOut(BaseModel):
     tau: float | None
     points: list[CheckpointOut]
     stopped_at: int | None
+    tau_from_data: bool  # the default tau uses the final variance, so the guarantee is only approximate
 
     @classmethod
-    def of(cls, s: SequentialResult) -> "SequentialOut":
+    def of(cls, s: SequentialResult, tau_from_data: bool) -> "SequentialOut":
         points = [
             CheckpointOut(
                 n=p.n, p_value=finite(p.p_value), ci_low=finite(p.ci_low), ci_high=finite(p.ci_high)
             )
             for p in s.points
         ]
-        return cls(tau=finite(s.tau), points=points, stopped_at=s.stopped_at)
+        return cls(tau=finite(s.tau), points=points, stopped_at=s.stopped_at, tau_from_data=tau_from_data)
 
 
 class Summary(BaseModel):

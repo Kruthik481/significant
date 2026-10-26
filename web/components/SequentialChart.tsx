@@ -97,7 +97,7 @@ export function SequentialChart({ report }: { report: Report }) {
       <figure className="space-y-2">
         <PValuePath report={report} seq={seq} />
         <figcaption className="fig-caption">
-          <b>Fig. 2</b> Always-valid p-value as users arrived (log scale). Unlike a classic p-value, it stays honest
+          <b>Fig. 2</b> Always-valid p-value as users arrived (log scale). Unlike a classic p-value, it stays valid
           however often you look{seq.stopped_at ? `; it crossed α at ${seq.stopped_at.toLocaleString()} users.` : ', and it never crossed α.'}
         </figcaption>
       </figure>
@@ -105,7 +105,7 @@ export function SequentialChart({ report }: { report: Report }) {
         <ConfidenceBand seq={seq} kind={report.summary.kind} />
         <figcaption className="fig-caption">
           <b>Fig. 3</b> Confidence sequence for the difference: a range that holds at every look. Once it excludes 0, the
-          direction of the effect is settled.
+          direction of the effect holds at {Math.round((1 - report.alpha) * 100)}% confidence.{seq.tau_from_data ? ' τ was set from this data, so treat the guarantee as approximate; fix τ before the test for the strict version.' : ''}
         </figcaption>
       </figure>
     </div>

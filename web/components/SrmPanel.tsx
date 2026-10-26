@@ -12,8 +12,8 @@ export function SrmPanel({ report }: { report: Report }) {
     <section data-testid="srm-panel" className="space-y-3">
       <p className={srm.flagged ? 'alert' : 'muted'}>
         {srm.flagged
-          ? `Sample ratio mismatch (${pText(srm.p_value)}). The split is too far from the design to be chance, so the users in each arm are no longer comparable.`
-          : `The split matches the design (${pText(srm.p_value)}); nothing suggests users were lost or double-counted.`}
+          ? `Sample ratio mismatch (${pText(srm.p_value)}). A split this far from the design is very unlikely by chance, so the arms may no longer be comparable.`
+          : `The split matches the design (${pText(srm.p_value)}); there is no sign that users were lost or double-counted.`}
       </p>
       <div className="overflow-x-auto">
         <table className="ledger">

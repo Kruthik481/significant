@@ -72,5 +72,7 @@ def analyze(exp: Experiment, opts: AnalysisOptions) -> Report:
         raw=TestOut.of(raw),
         cuped=None if adjusted is None else CupedOut.of(adjusted),
         srm=SrmOut.of(ratio),
-        sequential=None if sequential is None else SequentialOut.of(sequential),
+        sequential=None
+        if sequential is None
+        else SequentialOut.of(sequential, tau_from_data=opts.tau is None),
     )

@@ -5,7 +5,6 @@ import logging
 import os
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
-from datetime import timedelta
 from typing import Annotated, Any, Literal
 
 from fastapi import FastAPI, File, Form, Request, UploadFile
@@ -21,11 +20,10 @@ from app.limits import RateLimiter
 from app.samples import SAMPLES, sample_csv
 from app.settings import Settings
 from app.stats.power import sample_size
-from app.store import Store
+from app.store import RETENTION, Store
 
 log = logging.getLogger("significant")
 
-RETENTION = timedelta(days=90)
 NAME_LIMIT = 120
 RATE_WINDOW_SECONDS = 3600
 

@@ -111,7 +111,7 @@ export function Home() {
 
       <footer id="method" className="muted space-y-1 pb-8 text-[0.95rem]">
         <p><b className="text-[var(--ink)]">Method.</b> CUPED follows Deng et al. (2013); sequential tests use the mixture SPRT of Johari et al. (2017); the SRM check follows Kohavi et al., <i>Trustworthy Online Controlled Experiments</i>.</p>
-        <p>Every statistic is checked against scipy/statsmodels, and simulations confirm the false-positive rates.</p>
+        <p>The z-test, Welch’s t-test, SRM and power match scipy/statsmodels; CUPED and the mSPRT are checked against their closed forms, and simulations confirm the false-positive rates.</p>
       </footer>
     </main>
   );

@@ -66,6 +66,9 @@ def msprt(
 ) -> SequentialResult | None:
     idx = np.argsort(order, kind="stable")
     v, t = values[idx].astype(float), treated[idx].astype(bool)
+    v = (
+        v - v.mean()
+    )  # running sums of squares cancel catastrophically at a large mean; shifts leave delta alone
     n_t, mean_t, var_t = _prefix_stats(v, t)
     n_c, mean_c, var_c = _prefix_stats(v, ~t)
     sizes = [k for k in _prefix_sizes(v.size, checkpoints) if min(n_t[k - 1], n_c[k - 1]) >= MIN_PER_ARM]

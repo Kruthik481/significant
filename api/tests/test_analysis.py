@@ -77,3 +77,14 @@ def test_degenerate_data_serialises_without_nan():
 def test_options_are_validated(kwargs):
     with pytest.raises(ValueError):
         AnalysisOptions(**kwargs)
+
+
+def test_sequential_discloses_whether_tau_came_from_the_data():
+    from app.ingest import parse_csv
+    from app.samples import sample_csv
+
+    exp = parse_csv(sample_csv("checkout_win"))
+    default = analyze(exp, AnalysisOptions()).sequential
+    fixed = analyze(exp, AnalysisOptions(tau=0.01)).sequential
+    assert default is not None and default.tau_from_data
+    assert fixed is not None and not fixed.tau_from_data

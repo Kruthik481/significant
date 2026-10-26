@@ -37,3 +37,18 @@ async def test_purge_removes_only_old_reports(pg_schema):
         assert await store.get(new) is not None
     finally:
         await store.close()
+
+
+async def test_expired_reports_are_hidden_before_the_purge_runs(pg_schema):
+    dsn, schema = pg_schema
+    store = await Store.open(dsn, schema)
+    try:
+        await store.migrate()
+        old = await store.save("old", "upload", {})
+        async with store.pool.connection() as conn:
+            await conn.execute(
+                "UPDATE reports SET created_at = now() - interval '91 days' WHERE id = %s", (old,)
+            )
+        assert await store.get(old) is None
+    finally:
+        await store.close()

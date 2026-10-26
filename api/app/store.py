@@ -24,6 +24,8 @@ CREATE TABLE IF NOT EXISTS reports (
 CREATE INDEX IF NOT EXISTS reports_created_at ON reports (created_at);
 """
 
+RETENTION = timedelta(days=90)
+
 
 @dataclass(frozen=True)
 class StoredReport:
@@ -80,7 +82,9 @@ class Store:
     async def get(self, rid: str) -> StoredReport | None:
         async with self.pool.connection() as conn, conn.cursor(row_factory=dict_row) as cur:
             await cur.execute(
-                "SELECT id, name, source, created_at, report FROM reports WHERE id = %s", (rid,)
+                "SELECT id, name, source, created_at, report FROM reports"
+                " WHERE id = %s AND created_at >= now() - %s",
+                (rid, RETENTION),
             )
             row = await cur.fetchone()
         return None if row is None else StoredReport(**row)

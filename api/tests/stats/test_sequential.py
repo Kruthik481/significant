@@ -84,3 +84,16 @@ def test_peeking_at_every_checkpoint_keeps_the_false_positive_rate():
         assert res is not None
         hits += res.stopped_at is not None
     assert hits / 500 <= 0.07
+
+
+def test_a_huge_mean_offset_does_not_change_the_result():
+    rng = np.random.default_rng(5)
+    n = 20_000
+    treated = rng.random(n) < 0.5
+    values = rng.normal(np.where(treated, 10.1, 10.0), 2.0)
+    order = np.arange(n, dtype=float)
+    base = msprt(values, treated, order, alpha=0.05)
+    shifted = msprt(values + 1e9, treated, order, alpha=0.05)
+    assert base is not None and shifted is not None
+    assert shifted.tau == pytest.approx(base.tau, rel=1e-6)
+    assert [p.p_value for p in shifted.points] == pytest.approx([p.p_value for p in base.points], rel=1e-6)

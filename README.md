@@ -12,8 +12,8 @@ An A/B test analyzer that gives a readout you can defend. Upload an experiment a
 |---|---|
 | **Significance with intervals.** A two-proportion z-test for conversion metrics and Welch's t-test for continuous ones. The relative lift gets a delta-method interval. | A lift is a range, not a point. The interval shows which effects are still plausible, so a null result reads as "inconclusive" rather than "no effect". |
 | **CUPED** (Deng et al., 2013). The metric is adjusted with a pre-experiment covariate using one pooled θ. | It removes noise the experiment didn't cause. On the `pricing_null` sample it cuts variance by 45%, which gives the same answer with a much tighter interval. |
-| **Sample ratio mismatch.** A chi-square test of the observed split against the designed one, flagged at p < 0.001. | A broken split means users were lost or duplicated unevenly, which biases every other number. A flagged SRM overrides any "win". |
-| **Always-valid sequential testing.** A normal-mixture mSPRT (Johari et al., 2017) with a confidence sequence, computed at up to 50 looks. | Peeking at a classic p-value inflates false positives. This p-value stays valid at every look, so a test can stop as soon as it is decided. The `checkout_win` sample is decided at 12,000 of its 40,000 users. |
+| **Sample ratio mismatch.** A chi-square test of the observed split against the designed one, flagged at p < 0.001. | A broken split means users were lost or duplicated unevenly, which can bias every other number. A flagged SRM overrides any "win". |
+| **Always-valid sequential testing.** A normal-mixture mSPRT (Johari et al., 2017) with a confidence sequence, computed at up to 50 looks. | Peeking at a classic p-value inflates false positives. This p-value stays valid at every look, so a test can stop as soon as it is decided. By default τ is set from the final sample's variance, which makes the guarantee approximate; pass `tau` fixed before the test for the strict version. The `checkout_win` sample is decided at 12,000 of its 40,000 users. |
 | **Power.** Sample size per arm for a two-sided test, and the minimum detectable effect for a given n. | Sizes the next test from this one's baseline. |
 
 The verdict comes from the CUPED result when a `pre_metric` column exists, and from the raw test otherwise.
@@ -22,7 +22,7 @@ The verdict comes from the CUPED result when a `pre_metric` column exists, and f
 
 The statistics are pure numpy functions. Each one is tested against a reference or a simulation:
 
-- The z-test matches `statsmodels.proportions_ztest`. Welch's t-test, its degrees of freedom and its interval match `scipy.stats.ttest_ind(equal_var=False)`. SRM matches `scipy.stats.chisquare`. Continuous power matches `statsmodels.NormalIndPower`.
+- The z-test matches `statsmodels.proportions_ztest`. Welch's t-test, its degrees of freedom and its interval match `scipy.stats.ttest_ind(equal_var=False)`. SRM matches `scipy.stats.chisquare`. Continuous power matches `statsmodels.NormalIndPower`. CUPED's θ and adjusted means and the mSPRT p-value are checked against their closed forms.
 - 2,000 simulated A/A tests give a false-positive rate in [3.5%, 6.5%] at α = 0.05.
 - 2,000 simulations confirm that the absolute and delta-method intervals cover the true effect 93–97% of the time.
 - 500 A/A streams, checked at every look, stop by mistake at most 7% of the time. The always-valid p-value never increases, and the confidence sequence only narrows.

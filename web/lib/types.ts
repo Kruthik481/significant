@@ -28,7 +28,12 @@ export type SrmOut = {
 };
 
 export type Checkpoint = { n: number; p_value: number | null; ci_low: number | null; ci_high: number | null };
-export type SequentialOut = { tau: number | null; points: Checkpoint[]; stopped_at: number | null };
+export type SequentialOut = {
+  tau: number | null;
+  points: Checkpoint[];
+  stopped_at: number | null;
+  tau_from_data: boolean;
+};
 
 export type Summary = {
   control: string;
