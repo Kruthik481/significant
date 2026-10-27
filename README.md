@@ -2,7 +2,7 @@
 
 An A/B test analyzer that gives a readout you can defend. Upload an experiment as a CSV, or try one of three samples with a planted answer. You get the effect with its uncertainty, after the checks a reviewer would ask for first. Every report gets a shareable link.
 
-**Live demo:** coming soon
+**Live demo:** [significant-lyart.vercel.app](https://significant-lyart.vercel.app) (the API runs on Render's free tier, so the first request after a quiet spell can take about 30 seconds)
 
 ![A report for the checkout sample: treatment wins by 11.4%, decided early at 12,000 of 40,000 users](docs/report.png)
 
