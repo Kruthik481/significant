@@ -28,7 +28,7 @@ The statistics are pure numpy functions. Each one is tested against a reference 
 - 500 A/A streams, checked at every look, stop by mistake at most 7% of the time. The always-valid p-value never increases, and the confidence sequence only narrows.
 - Each sample dataset reproduces its planted ground truth: a win, a null and a broken split.
 
-There are 94 API tests with 97% coverage, plus web unit tests and a Playwright end-to-end test.
+There are 104 API tests with 97% coverage, plus web unit tests and a Playwright end-to-end test.
 
 ## CSV format
 
