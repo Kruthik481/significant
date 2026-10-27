@@ -45,3 +45,10 @@ export function verdictCopy(v: Verdict, r: Report): VerdictCopy {
       };
   }
 }
+
+export const TONE: Record<Verdict, Tone> = {
+  significant_win: 'win',
+  significant_loss: 'loss',
+  not_significant: 'neutral',
+  srm_invalid: 'invalid',
+};

@@ -48,11 +48,11 @@ function PValuePath({ report, seq }: { report: Report; seq: SequentialOut }) {
       ))}
       <line x1={M.left} x2={W - M.right} y1={y(report.alpha)} y2={y(report.alpha)} stroke="var(--pen)" strokeDasharray="6 4" strokeWidth="1.5" />
       <text x={W - M.right} y={y(report.alpha) - 6} textAnchor="end" className="pen" fontSize="18" fill="var(--pen)">α = {report.alpha}</text>
-      <path d={path} fill="none" stroke="var(--ink)" strokeWidth="2.5" strokeLinejoin="round" />
+      <path d={path} pathLength={1} className="draw" fill="none" stroke="var(--ink)" strokeWidth="2.5" strokeLinejoin="round" />
       {stop && (
         <g>
-          <circle cx={x(stop.n)} cy={y(stop.p_value ?? 1)} r="9" fill="none" stroke="var(--pen)" strokeWidth="2.5" />
-          <text x={x(stop.n) + 14} y={y(stop.p_value ?? 1) - 10} className="pen" fontSize="20" fill="var(--pen)">safe to stop here</text>
+          <circle cx={x(stop.n)} cy={y(stop.p_value ?? 1)} r="9" pathLength={1} className="pen-stroke draw-pen" />
+          <text x={x(stop.n) + 14} y={y(stop.p_value ?? 1) - 10} className="pen rise-late" fontSize="20" fill="var(--pen)">safe to stop here</text>
         </g>
       )}
       <XAxis seq={seq} x={x} />
@@ -73,7 +73,7 @@ function ConfidenceBand({ seq, kind }: { seq: SequentialOut; kind: Kind }) {
   return (
     <svg viewBox={`0 0 ${W} ${H}`} className="w-full" role="img"
       aria-label={`Confidence sequence narrows to ${signedDiff(last.ci_low, kind)} to ${signedDiff(last.ci_high, kind)}`}>
-      <path d={area} fill="var(--ink)" fillOpacity="0.14" stroke="var(--ink)" strokeWidth="1.5" />
+      <path d={area} className="rise" fill="var(--ink)" fillOpacity="0.14" stroke="var(--ink)" strokeWidth="1.5" />
       <line x1={M.left} x2={W - M.right} y1={y(0)} y2={y(0)} stroke="var(--ink-soft)" strokeDasharray="4 4" />
       <text x={M.left - 8} y={y(0) + 4} textAnchor="end" fontSize="12" className="data" fill="var(--ink-soft)">0</text>
       <text x={M.left - 8} y={y(hi) + 10} textAnchor="end" fontSize="12" className="data" fill="var(--ink-soft)">{signedDiff(hi, kind)}</text>

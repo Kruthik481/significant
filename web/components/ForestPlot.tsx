@@ -36,7 +36,7 @@ export function ForestPlot({ report }: { report: Report }) {
               <text x={0} y={y + 5} fontSize="15" fill="var(--ink)">{label}</text>
               {a !== null && b !== null && (
                 <>
-                  <line x1={x(a)} x2={x(b)} y1={y} y2={y} stroke="var(--ink)" strokeWidth="2.5" />
+                  <line x1={x(a)} x2={x(b)} y1={y} y2={y} pathLength={1} className="draw" style={{ animationDelay: `${i * 250}ms` }} stroke="var(--ink)" strokeWidth="2.5" />
                   <line x1={x(a)} x2={x(a)} y1={y - 7} y2={y + 7} stroke="var(--ink)" strokeWidth="2" />
                   <line x1={x(b)} x2={x(b)} y1={y - 7} y2={y + 7} stroke="var(--ink)" strokeWidth="2" />
                 </>

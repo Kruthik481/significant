@@ -35,7 +35,7 @@ export function PowerCalculator({ report }: { report: Report }) {
   const set = (key: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement>) => setForm({ ...form, [key]: e.target.value });
   return (
     <form onSubmit={submit} className="space-y-3">
-      <div className="grid gap-3 sm:grid-cols-3">
+      <div className="grid gap-3 sm:grid-cols-3 sm:items-end">
         <label className="field">{kind === 'binary' ? 'Baseline rate' : 'Baseline mean'}<input value={form.baseline} onChange={set('baseline')} inputMode="decimal" /></label>
         <label className="field">Smallest change worth detecting (%)<input value={form.lift} onChange={set('lift')} inputMode="decimal" /></label>
         {kind === 'continuous' && <label className="field">Standard deviation<input value={form.sd} onChange={set('sd')} inputMode="decimal" /></label>}
